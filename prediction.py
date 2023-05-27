@@ -2,6 +2,7 @@ import streamlit as st
 import joblib
 import pandas as pd
 import numpy as np
+from PIL import Image
 
 
 
@@ -121,11 +122,13 @@ def run_predict_app():
             if prediction == 1:
                 pred_probability_score = pred_prob[0][1]*100
                 st.write("Prediction Probability Score :")
-                st.success("There is a : {:.2f} % you will survived like Rose".format(pred_probability_score)
-                st.image('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4ecuzG9RYQP-T74Q5Hz2432XIpN3mjHBQUw&usqp=CAU')
+                st.success("There is a : {:.2f} % you will survived like Rose".format(pred_probability_score))
+                image_rose = Image.open('rose.jpeg')
+                st.image(image_rose)
             else:
                 pred_probability_score = pred_prob[0][0]*100
                 st.write("Prediction Probability Score")
-                st.warning("There is a : {:.2f} % you will end up like Jack".format(pred_probability_score)
-                st.image('https://img.tek.id/img/content/2023/01/14/57571/leonardo-dicaprio-awalnya-tolak-perankan-jack-di-titanic-k5K8am8Sbw.jpg')
+                st.warning("There is a : {:.2f} % you will end up like Jack".format(pred_probability_score))
+                image_jack = Image.open('jack.jpeg')
+                st.image(image_jack)
               
