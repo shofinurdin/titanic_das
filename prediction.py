@@ -10,27 +10,122 @@ def load_model():
 	return model_gb
 
 def run_predict_app():
-    st.write("Prediction Section")
+    st.subheader("Prediction Section")
     model=load_model()
     with st.sidebar:
         st.title("Features")
     # st.sidebar
         pclass= st.selectbox('PClass :',(1,2,3))
-        sex = st.selectbox('Sex :', (1,2))
-        single= st.selectbox('Single :', (0,1))
-        parch= st.selectbox('Parch :', (0,1,2,3,4))
-     
-    if st.button("Click Here to Classify"):
-        dfvalues = pd.DataFrame(list(zip([pclass],[sex],[single],[parch])),columns =['pclass', 'sex', 'single', 'parch'])
-        input_variables = np.array(dfvalues[['pclass', 'sex', 'single', 'parch']])
-        st.write('Input :')
-        data_input=pd.DataFrame(data=input_variables, columns=['pclass', 'sex', 'single', 'parch'])
-        st.dataframe(data_input)
-        prediction = model.predict(input_variables)
-        st.write('Prediction :')
-        st.write(prediction)
-        if prediction == 1:
-            st.image('https://img.freepik.com/premium-vector/emoji-pleasantly-surprised-emoticon-reaction-icon-vector_81894-5337.jpg?w=2000')
+        fare = st.number_input('Fare :', min_value=0.0, max_value=263.0)
+        sex_label = st.selectbox('Sex :', ('Male','Female'))
+        if sex_label=='Male':
+            sex=0
         else:
-            st.image('https://img.freepik.com/premium-vector/sad-emoticon-yellow-apps-websites_340607-156.jpg?w=2000')
+            sex=1
         
+        Embarked = st.selectbox('Embarked :', ('Cherbourg','Queenstown','Southampton'))
+        if Embarked=='Cherbourg':
+            embarked_enc=0
+        elif Embarked=='Queenstown':
+            embarked_enc=1
+        else:
+            embarked_enc=2
+       
+        initial = st.selectbox('Initial :', ('Mr','Mrs','Miss','Master','Other'))
+        if initial=='Mr':
+            mr=1
+            mrs=0
+            miss=0
+            master=0
+            other=0
+        elif initial=='Mrs':
+            mr=0
+            mrs=1
+            miss=0
+            master=0
+            other=0
+        elif initial=='Miss':
+            mr=0
+            mrs=0
+            miss=1
+            master=0
+            other=0
+        elif initial=='Master':
+            mr=0
+            mrs=0
+            miss=0
+            master=1
+            other=0
+        else:
+            mr=0
+            mrs=0
+            miss=0
+            master=0
+            other=1
+
+        age = st.slider('Age',0, 100)
+        cut_points = [0, 15, 30, 50, 100]
+        age_label = ['child', 'young_adult', 'adult', 'elderly']
+        age_group=pd.cut([age],bins=cut_points, labels=age_label, include_lowest=True)
+        if age_group[0]=='child':
+            child=1
+            young_adult=0
+            adult=0
+            elderly=0
+        elif age_group[0]=='young_adult':
+            child=0
+            young_adult=1
+            adult=0
+            elderly=0
+        elif age_group[0]=='adult':
+            child=0
+            young_adult=0
+            adult=1
+            elderly=0
+        else:
+            child=0
+            young_adult=0
+            adult=0
+            elderly=1
+     
+    if st.button("Click here to predict"):
+        st.info('Input :')
+        st.write('Class : {}'.format(pclass))
+        st.write('Fare : ${} '.format(fare))
+        st.write('Sex : ', sex_label)
+        st.write('Embarked :', Embarked)
+        st.write('Initial :', initial)
+        st.write('Age : {}'.format(age))
+        dfvalues = pd.DataFrame(list(zip([pclass],[fare],[sex],[embarked_enc],[mr],[mrs],[miss],[master],[other],
+                                         [young_adult],[adult],[elderly],[child])),columns =['pclass', 'fare', 'sex', 'embarked','mr','mrs',
+                                                           'miss','master','other','young_adult','adult',
+                                                           'elderly','child'])
+       
+        input_variables=np.array(dfvalues)
+
+        st.info('Convertion :')
+        st.dataframe(dfvalues)
+        prediction = model.predict(input_variables)
+        pred_prob = model.predict_proba(input_variables)
+        st.info('Result :')
+        col1,col2 = st.columns([1,2])
+        with col1:
+            st.write('Prediction :')
+            hasil= prediction[0]
+            if hasil == 1:
+                st.success('Survived')
+            else :
+                st.warning('Not Survived')
+        
+        with col2:
+            if prediction == 1:
+                pred_probability_score = pred_prob[0][1]*100
+                st.write("Prediction Probability Score :")
+                st.success("There is a : {:.2f} % you will survived like Rose".format(pred_probability_score)
+                st.image('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT4ecuzG9RYQP-T74Q5Hz2432XIpN3mjHBQUw&usqp=CAU')
+            else:
+                pred_probability_score = pred_prob[0][0]*100
+                st.write("Prediction Probability Score")
+                st.warning("There is a : {:.2f} % you will end up like Jack".format(pred_probability_score)
+                st.image('https://img.tek.id/img/content/2023/01/14/57571/leonardo-dicaprio-awalnya-tolak-perankan-jack-di-titanic-k5K8am8Sbw.jpg')
+              

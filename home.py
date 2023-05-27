@@ -7,9 +7,11 @@ from prediction import run_predict_app
 from eda import run_eda_app
 
 
-st.set_page_config(page_title="ML & DEA",
-		   page_icon=":bar_chart:",
+st.set_page_config(page_title="Titanic ML",
+		   page_icon="🚢",
 		   layout="wide")
+
+
 
 html_temp = """
 		<div style="background-color:#3872fb;padding:5px;border-radius:10px">
@@ -24,11 +26,11 @@ def main():
     menu = ["Home","EDA","Prediction"]
     choice = st.sidebar.selectbox("Menu",menu)
     if choice == "Home":
-        st.write('Home Menu')
+        st.subheader('Home Menu')
         st.image('https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Titanic-Cobh-Harbour-1912.JPG/1600px-Titanic-Cobh-Harbour-1912.JPG')
         st.write("""
                 ###### APP Content:
-                EDA Section: Exploratory Data Analysis of Data | Preprocessing Section | Prediction Section: ML Predictor App
+                EDA Section: Exploratory Data Analysis of Data | Prediction Section: ML Predictor App
 			""")
     elif choice == "EDA":
         run_eda_app()
