@@ -123,12 +123,15 @@ def run_predict_app():
                 pred_probability_score = pred_prob[0][1]*100
                 st.write("Prediction Probability Score :")
                 st.success("There is a : {:.2f} % you will survived like Rose".format(pred_probability_score))
-                image_rose = Image.open('rose.jpeg')
-                st.image(image_rose)
+                # image_rose = Image.open('rose.jpeg')
+                # st.image(image_rose,width=460)
+                img="https://www.thelist.com/img/gallery/things-only-adults-notice-in-titanic/why-would-rose-display-paintings-for-a-week-long-trip-on-the-titanic-1575316189.jpg"
+                st.image(img,width=460)
             else:
                 pred_probability_score = pred_prob[0][0]*100
                 st.write("Prediction Probability Score")
                 st.warning("There is a : {:.2f} % you will end up like Jack".format(pred_probability_score))
-                image_jack = Image.open('jack.jpeg')
-                st.image(image_jack)
+                # image_jack = Image.open('jack.jpeg')
+                image_jack="https://imgix.bustle.com/uploads/image/2017/7/4/e60d1805-b01f-4f02-a155-13f33814639a-jack-dawson-dirtbag.jpg?w=800&fit=crop&crop=faces&auto=format%2Ccompress&q=50&dpr=2"
+                st.image(image_jack, width=460)
               
